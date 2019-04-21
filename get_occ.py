@@ -170,7 +170,7 @@ def download_occ_im_URLS(dest):
 	# 		# 	w = csv.writer(csvfile)
 	# 		# 	w.writerow(out_csv)
 
-	for p in art2: 
+	for p in art3: 
 
 		for i in range(400):
 			local_name =  dest + "A_" +   p + "_" + str(i) + ".jpg"
