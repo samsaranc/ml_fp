@@ -6,6 +6,18 @@ __pycache__/
 # C extensions
 *.so
 
+#MacOS 
+.DS_Store
+
+#images 
+*.PNG
+*.png
+*.JPG
+*.jpg
+*.JPEG
+*.jpeg
+*.tiff
+
 # Distribution / packaging
 .Python
 build/
