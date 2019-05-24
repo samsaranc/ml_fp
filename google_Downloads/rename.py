@@ -106,34 +106,25 @@ def rename_indian(dir_t, pattern, titlePattern):
 		# print(title)
 		# print (end_str)
 		
-		new_title = "painter_" + str(title)
-		if ()
-		end_str = new_title + str(ext)).replace(" ", "_")
+		new_title = titlePattern + str(title)
+		end_str = (new_title + str(ext)).replace(" ", "_")
 		end_str = end_str.replace("Screen_Shot_2019-04-26_at_3.0", "")
 		end_str = end_str.replace("-_2019-04-26T050049.","")
 		end_str = end_str.replace("PM", "")
 		end_str = end_str.replace("images", "")
 		end_str = end_str.replace("download", "")
 
-		# print(end_str)
-		new_name = str(titlePattern) + end_str
-		print(new_name)
+		print(end_str)
+		# new_name = str(titlePattern) + end_str
+		# print(new_name)
 
-		os.rename(pathAndFilename, os.path.join(dir_t, new_name))
+		os.rename(pathAndFilename, os.path.join(dir_t, end_str))
 		# break
 
-
 if __name__== "__main__":
-	rename("artist_woman_hispanic","*","A_artist_woman_hispanic_" )
+	# rename("artist_woman_hispanic","*","A_artist_woman_hispanic_" )
+	rename_indian("indian_painter_famous", "*.*", "A_painter_man_indian_")
 	# rename_replace2("artist_asian_woman","*","_-_")
 	# rename_replace(".","*","A_artist_asian_woman_A_artist_asian_woman_", "A_artist_asian_woman_")
-	# rename_replace("painter_black_woman", "*","A_painter_womman_black_", "A_painter_woman_black_" )
-	# rename(r'c:\temp\xx', r'*.doc', r'new(%s)')
-
-
-if __name__== "__main__":
-	rename("artist_woman_hispanic","*","A_artist_woman_hispanic_" )
-	# rename_replace2("artist_asian_woman","*","_-_")
-	# rename_replace(".","*","A_artist_asian_woman_A_artist_asian_woman_", "A_artist_asian_woman_")
-	# rename_replace("painter_black_woman", "*","A_painter_womman_black_", "A_painter_woman_black_" )
+	# rename_replace("painter_black_woman", "*","A_painter_woman_black_", "A_painter_woman_black_" )
 	# rename(r'c:\temp\xx', r'*.doc', r'new(%s)')

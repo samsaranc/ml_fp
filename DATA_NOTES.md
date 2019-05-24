@@ -11,3 +11,8 @@ NOTES
 	- google search 
 	- bing search (kay et al)
 	- Celis 
+
+totals: 
+	- scientist: 	4827
+	- artist: 		4365
+	- fashion: 		6470

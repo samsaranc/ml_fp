@@ -1,0 +1,12 @@
+flask
+flask_restful
+flask_httpauth
+wget
+pandas
+statistics
+future
+matplotlib
+sklearn
+aws
+boto3
+gunicorn
