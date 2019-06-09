@@ -88,7 +88,6 @@ class learn():
 ************************ LOAD DATA ***************************************
 ************************************************************************
 '''
-
 	def loadData(self):
 		#transforms to reduce model bias  
 		data_transforms = {'tra': transforms.Compose([
@@ -211,7 +210,7 @@ class learn():
 						elif epoch >= int(num_epochs*0.8): self.model.module.d_rate(0)
 
 					if not self.mp:
-						self.model.train(True)  # Set model to training mode
+						self.model.train(True)	# Set model to training mode
 						if epoch < int(num_epochs*0.3): self.model.d_rate(0.1)
 						elif epoch >= int(num_epochs*0.3) and epoch < int(num_epochs*0.6): self.model.d_rate(0.1)
 						elif epoch >= int(num_epochs*0.6) and epoch < int(num_epochs*0.8): self.model.d_rate(0.05)
@@ -219,7 +218,7 @@ class learn():
 
 				if phase == 'val':
 					if self.mp:
-						self.model.module.train(False)  # Set model to evaluate mode
+						self.model.module.train(False)	# Set model to evaluate mode
 						self.model.module.d_rate(0)
 
 					if not self.mp:
