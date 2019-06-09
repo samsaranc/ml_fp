@@ -83,28 +83,27 @@ class learn():
 		return
 
 
-'''
-************************************************************************
-************************ LOAD DATA ***************************************
-************************************************************************
-'''
+#************************************************************************
+#************************ LOAD DATA ***************************************
+#************************************************************************
+
 	def loadData(self):
 		#transforms to reduce model bias  
 		data_transforms = {'tra': transforms.Compose([
-								  transforms.Resize(size=300, interpolation=Image.BICUBIC),
-								  transforms.RandomCrop(224),
-								  transforms.RandomHorizontalFlip(),
-								  transforms.ToTensor(),
-								  transforms.Normalize(RGBmean, RGBstdv)]),
+								transforms.Resize(size=300, interpolation=Image.BICUBIC),
+								transforms.RandomCrop(224),
+								transforms.RandomHorizontalFlip(),
+								transforms.ToTensor(),
+								transforms.Normalize(RGBmean, RGBstdv)]),
 						   'val': transforms.Compose([
-								  transforms.Resize(size=300, interpolation=Image.BICUBIC),
-								  transforms.CenterCrop(224),
-								  transforms.ToTensor(),
-								  transforms.Normalize(RGBmean, RGBstdv)])}
+								transforms.Resize(size=300, interpolation=Image.BICUBIC),
+								transforms.CenterCrop(224),
+								transforms.ToTensor(),
+								transforms.Normalize(RGBmean, RGBstdv)])}
 
 		self.dsets = {p: datasets.ImageFolder(os.path.join(self.src, p), data_transforms[p]) for p in PHASE}
 		self.class2indx = self.dsets['tra'].class_to_idx
-	
+
 		self.indx2class = {v: k for k,v in self.class2indx.items()}
 		self.class_size = {p: {k: 0 for k in self.class2indx} for p in PHASE }# number of images in each class
 		self.N_classes = len(self.class2indx)# total number of classes
@@ -151,11 +150,10 @@ class learn():
 		self.dataLoader = {p: torch.utils.data.DataLoader(self.dsets[p], batch_size=self.batch_size, sampler=self.sampler[p], num_workers=self.num_workers, drop_last = True) for p in PHASE}
 		return
 
-'''
-************************************************************************
-************************ SET MODEL ***************************************
-************************************************************************
-'''
+#************************************************************************
+#************************ SET MODEL ***************************************
+#************************************************************************
+
 	#Loads a pretrained Resnet model from the internet from class resnetP 
 	def setModel(self):
 		Pmodel = resnetP(self.N_classes) # create whole model
@@ -175,11 +173,11 @@ class learn():
 			self.optimizer = optim.SGD(self.model.fc.parameters(),lr=OPT_LR, momentum=OPT_MOMENTUM)
 		return
 
-'''
-************************************************************************
-************************ TRAINING ***************************************
-************************************************************************
-'''
+
+#************************************************************************
+#************************ TRAINING ***************************************
+#************************************************************************
+
 
 	def train(self, num_epochs):
 		# recording time and epoch acc and best result
@@ -278,13 +276,14 @@ class learn():
 		P.recordPlot(self.record, self.dst)
 		return
 
-'''		# IN ________________________
+# ---------------------
+		# IN ________________________
 		# all_data is self.dataLoader[phase]
 		# OUT_________________________
 		#
-	def iterate_batch (self, all_data, ): 
-		print('iterate_batch TODO')
-'''
+	# def iterate_batch (self, all_data, ): 
+		# print('iterate_batch TODO')
+# ---------------------
 
 	def deep_copy (self, epoch, epoch_acc): 
 		print('deep_copy NEED TO CHECK')
