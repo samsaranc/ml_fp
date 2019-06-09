@@ -22,7 +22,7 @@ from PNet import resnetP, PSampler
 ************************************************************************
 '''
 
-TRAINING_PHASE = ['tra', 'val']
+PHASE = ['tra', 'val']
 RGBmean, RGBstdv = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 EPOCH_MULT = 4
 OPT_LR = 0.01
