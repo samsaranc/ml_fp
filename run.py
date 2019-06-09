@@ -8,13 +8,13 @@ import Test as T
 def main():
 	# src = '..\\..\\data_split.s3\\'
 	#src = '../../data_split.s3/'
-	src = 'data_split.test/'
+	src = '../data_split.ml_fp.3way/'
 
 
-	dst = 'result.3way/'
+	dst = '../result.ml_fp.3way/'
   #  dst = 'result.s3_2/'
 	#gpuid = [0,1]
-	gpuid = [2]
+	gpuid = [1]
 	L = P.learn(src, dst, gpuid)
 	L.run()
 
