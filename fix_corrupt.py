@@ -22,27 +22,39 @@ def move_suckers(bad):
 
 	return
 
+
 def find_bad(dirname) :
 	bad = []
 
-	for filename in listdir(dirname):
-	if isIMG(filename):
-		if filename.endswith(".tiff") or filename.endswith(".TIFF"):
-			print("TIFF", filename)
+	rootdir = os.path.dirname(os.path.realpath(__file__))
+	print(rootdir)
 
-		try:
-			img = Image.open(dirname+filename) # open the image file
-			img.verify() # verify that it is, in fact an image
-		except (IOError, SyntaxError) as e:
-			print(filename) # print out the names of corrupt files
-			bad.append(filename)
+	for subdir, dirs, files in os.walk(rootdir):
+		# for filename in listdir(dirname):
+		for filename in files:
+			# print(os.path.join(rootdir, filename))
+			if isIMG(filename):
+				# if filename.endswith(".tiff") or filename.endswith(".TIFF"):
+				# 	print("TIFF", filename)
+
+				try:
+					img = Image.open(os.path.join(subdir, filename)) # open the image file
+					img.verify() # verify that it is, in fact an image
+
+				except (IOError, SyntaxError) as e:
+					print("CORRUPT", filename) # print out the names of corrupt files
+					bad.append(filename)
 
 	return bad
 
 
+rootdir = 'C:/Users/sid/Desktop/test'
+
+
+
 if __name__ == "__main__":
 	bad = find_bad('./')
-	move_suckers(bad)
+	# move_suckers(bad)
 
 '''	
 bad = ["S_imagenet_300.jpg", 
