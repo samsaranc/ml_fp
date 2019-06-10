@@ -29,7 +29,7 @@ len_sc =len(scientist_images)
 len_fa =len(fashion_images)
 len_ar =len(artist_images)
 min_len_images = min(len_sc,len_fa,len_ar)
-
+print("min", min_len_images)
 
 '''
 ************************************************************************
@@ -41,9 +41,15 @@ print("Copying fashion images")
 
 SPLIT = int(round(PERCENT_VAL * min_len_images))
 END = min_len_images
+thissplit = SPLIT
+thisend = END
+random.shuffle(fashion_images)
+
 print("SPLIT = " + str(SPLIT))
 print("END = " + str(END))
-random.shuffle(fashion_images)
+print("length val = " + str(len(fashion_images[:thissplit])))
+print("length tra = " + str(len(fashion_images[thissplit:thisend])))
+
 #copy val
 print("   to val")
 dest_dir = os.path.join(VAL_DIR, "F")
@@ -58,7 +64,7 @@ print("   to tra")
 dest_dir = os.path.join(TRA_DIR, "F")
 if not os.path.exists(dest_dir):
     os.makedirs(dest_dir)
-for i in fashion_images[SPLIT:thisend]:
+for i in fashion_images[SPLIT:END]:
     src = os.path.join(SRC_DIR, 'fashion', i)
     dest = os.path.join(dest_dir, i)
     shutil.copy(src, dest)
@@ -75,13 +81,9 @@ src_dir = os.path.join(SRC_DIR, 'scientist')
 random.shuffle(scientist_images)
 thissplit = SPLIT
 thisend = END
-'''if len(scientist_images) > len(fashion_images):
-    thissplit = int(round(PERCENT_VAL * len(fashion_images))) #fixed from len(scientist_images)
-    thisend = len(fashion_images) #fixed from len(scientist_images)
-'''
 
-thissplit = int(round(PERCENT_VAL * min_len_images))
-thisend = min_len_images
+# thissplit = int(round(PERCENT_VAL * min_len_images))
+# thisend = min_len_images
 
 print("length val = " + str(len(scientist_images[:thissplit])))
 print("length tra = " + str(len(scientist_images[thissplit:thisend])))
@@ -104,8 +106,9 @@ for i in scientist_images[thissplit:thisend]:
     src = os.path.join(src_dir,i)
     dest = os.path.join(dest_dir,i)
     shutil.copy(src,dest)
-    print(j)
+    # print(j)
     j = j+1
+print(j)
 
 '''
 ************************************************************************
@@ -119,13 +122,9 @@ src_dir = os.path.join(SRC_DIR, 'artist')
 random.shuffle(artist_images)
 thissplit = SPLIT
 thisend = END
-'''
-if len(artist_images) > len(fashion_images):
-    thissplit = int(round(PERCENT_VAL * len(fashion_images))) #fixed from len(artist_images)
-    thisend = len(fashion_images) #fixed from len(artist_images)
-'''
-thissplit = int(round(PERCENT_VAL * min_len_images))
-thisend = min_len_images
+
+# thissplit = int(round(PERCENT_VAL * min_len_images))
+# thisend = min_len_images
 print("length val = " + str(len(artist_images[:thissplit])))
 print("length tra = " + str(len(artist_images[thissplit:thisend])))
 # move val
@@ -147,5 +146,6 @@ for i in artist_images[thissplit:thisend]:
     src = os.path.join(src_dir,i)
     dest = os.path.join(dest_dir,i)
     shutil.copy(src,dest)
-    print(j)
+    # print(j)
     j = j+1
+print(j)
