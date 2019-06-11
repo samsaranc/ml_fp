@@ -21,7 +21,9 @@ from PNet import resnetP, PSampler
 ************************ PARAMS ***************************************
 ************************************************************************
 '''
-
+#suggested error fix for CUDNN mapping error 
+#torch.backends.cudnn.enabled = False
+#didn't work
 PHASE = ['tra', 'val']
 RGBmean, RGBstdv = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 EPOCH_MULT = 4
@@ -174,6 +176,16 @@ class learn():
 		return
 
 
+	def deep_copy(self, epoch, epoch_acc): 
+		print('deep_copy NEED TO CHECK')
+		self.best_tra = epoch_acc
+		self.best_epoch = epoch
+		self.best_model = copy.deepcopy(self.model)
+		torch.save(self.best_model, self.dst + 'model.pth')
+		torch.save(self.best_model.state_dict(), self.dst + 'state_dict.pth')
+		#NEW: use state_dict
+
+
 #************************************************************************
 #************************ TRAINING ***************************************
 #************************************************************************
@@ -267,7 +279,7 @@ class learn():
 				print('{:5}:\n N_A: {:.5f} N_T'.format(N_A,N_T))
 		
 				if phase == 'val' and epoch_tra > self.best_tra and epoch > epoch_save_pt:
-					deep_copy(self,epoch,epoch_acc) # deep copy the model
+					self.deep_copy(epoch,epoch_acc) # deep copy the model
 					
 		time_elapsed = time.time() - since
 		print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
@@ -285,16 +297,7 @@ class learn():
 		# print('iterate_batch TODO')
 # ---------------------
 
-	def deep_copy (self, epoch, epoch_acc): 
-		print('deep_copy NEED TO CHECK')
-		self.best_tra = epoch_acc
-		self.best_epoch = epoch
-		self.best_model = copy.deepcopy(self.model)
-		torch.save(self.best_model, self.dst + 'model.pth')
-		torch.save(self.best_model.state_dict(), self.dst + 'state_dict.pth')
-		#NEW: use state_dict
-
-	#set learning rate based on which epoch we're in
+		#set learning rate based on which epoch we're in
 	def lr_scheduler(self, epoch):
 		lr = self.init_lr * (0.1**(epoch // self.lr_decay_epoch))
 		if epoch % self.lr_decay_epoch == 0: print('LR is set to {}'.format(lr))

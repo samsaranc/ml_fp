@@ -14,7 +14,7 @@ def main():
 	dst = '../result.ml_fp.3way/'
   #  dst = 'result.s3_2/'
 	#gpuid = [0,1]
-	gpuid = [1]
+	gpuid = [3]
 	L = P.learn(src, dst, gpuid)
 	L.run()
 
