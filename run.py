@@ -11,7 +11,7 @@ def main():
 	src = '../data_split.ml_fp.3way/'
 
 
-	dst = '../result.ml_fp.3way/'
+	dst = 'result.ml_fp.3way/'
   #  dst = 'result.s3_2/'
 	#gpuid = [0,1]
 	gpuid = [3]
