@@ -1,4 +1,4 @@
-A tar file of the entire split dataset is available [here](https://github.com/samsaranc/ml_fp).
+A tar file of the entire split dataset is available [here](https://drive.google.com/file/d/1DnfVy4HbaExCISE8ePMT708DOpLRX1RC/view?usp=sharing).
 
 To load the classifier, typically you need to read the file `model.pth`
 which needs to be in the same directory as a `index2class.pth` file.
