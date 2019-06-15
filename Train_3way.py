@@ -21,8 +21,10 @@ from PNet import resnetP, PSampler
 ************************ PARAMS ***************************************
 ************************************************************************
 '''
-
-TRAINING_PHASE = ['tra', 'val']
+#suggested error fix for CUDNN mapping error 
+#torch.backends.cudnn.enabled = False
+#didn't work
+PHASE = ['tra', 'val']
 RGBmean, RGBstdv = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 EPOCH_MULT = 4
 OPT_LR = 0.01
@@ -83,29 +85,27 @@ class learn():
 		return
 
 
-'''
-************************************************************************
-************************ LOAD DATA ***************************************
-************************************************************************
-'''
+#************************************************************************
+#************************ LOAD DATA ***************************************
+#************************************************************************
 
 	def loadData(self):
 		#transforms to reduce model bias  
 		data_transforms = {'tra': transforms.Compose([
-								  transforms.Resize(size=300, interpolation=Image.BICUBIC),
-								  transforms.RandomCrop(224),
-								  transforms.RandomHorizontalFlip(),
-								  transforms.ToTensor(),
-								  transforms.Normalize(RGBmean, RGBstdv)]),
+								transforms.Resize(size=300, interpolation=Image.BICUBIC),
+								transforms.RandomCrop(224),
+								transforms.RandomHorizontalFlip(),
+								transforms.ToTensor(),
+								transforms.Normalize(RGBmean, RGBstdv)]),
 						   'val': transforms.Compose([
-								  transforms.Resize(size=300, interpolation=Image.BICUBIC),
-								  transforms.CenterCrop(224),
-								  transforms.ToTensor(),
-								  transforms.Normalize(RGBmean, RGBstdv)])}
+								transforms.Resize(size=300, interpolation=Image.BICUBIC),
+								transforms.CenterCrop(224),
+								transforms.ToTensor(),
+								transforms.Normalize(RGBmean, RGBstdv)])}
 
 		self.dsets = {p: datasets.ImageFolder(os.path.join(self.src, p), data_transforms[p]) for p in PHASE}
 		self.class2indx = self.dsets['tra'].class_to_idx
-	
+
 		self.indx2class = {v: k for k,v in self.class2indx.items()}
 		self.class_size = {p: {k: 0 for k in self.class2indx} for p in PHASE }# number of images in each class
 		self.N_classes = len(self.class2indx)# total number of classes
@@ -152,11 +152,10 @@ class learn():
 		self.dataLoader = {p: torch.utils.data.DataLoader(self.dsets[p], batch_size=self.batch_size, sampler=self.sampler[p], num_workers=self.num_workers, drop_last = True) for p in PHASE}
 		return
 
-'''
-************************************************************************
-************************ SET MODEL ***************************************
-************************************************************************
-'''
+#************************************************************************
+#************************ SET MODEL ***************************************
+#************************************************************************
+
 	#Loads a pretrained Resnet model from the internet from class resnetP 
 	def setModel(self):
 		Pmodel = resnetP(self.N_classes) # create whole model
@@ -176,11 +175,21 @@ class learn():
 			self.optimizer = optim.SGD(self.model.fc.parameters(),lr=OPT_LR, momentum=OPT_MOMENTUM)
 		return
 
-'''
-************************************************************************
-************************ TRAINING ***************************************
-************************************************************************
-'''
+
+	def deep_copy(self, epoch, epoch_acc): 
+		print('deep_copy NEED TO CHECK')
+		self.best_tra = epoch_acc
+		self.best_epoch = epoch
+		self.best_model = copy.deepcopy(self.model)
+		torch.save(self.best_model, self.dst + 'model.pth')
+		torch.save(self.best_model.state_dict(), self.dst + 'state_dict.pth')
+		#NEW: use state_dict
+
+
+#************************************************************************
+#************************ TRAINING ***************************************
+#************************************************************************
+
 
 	def train(self, num_epochs):
 		# recording time and epoch acc and best result
@@ -211,7 +220,7 @@ class learn():
 						elif epoch >= int(num_epochs*0.8): self.model.module.d_rate(0)
 
 					if not self.mp:
-						self.model.train(True)  # Set model to training mode
+						self.model.train(True)	# Set model to training mode
 						if epoch < int(num_epochs*0.3): self.model.d_rate(0.1)
 						elif epoch >= int(num_epochs*0.3) and epoch < int(num_epochs*0.6): self.model.d_rate(0.1)
 						elif epoch >= int(num_epochs*0.6) and epoch < int(num_epochs*0.8): self.model.d_rate(0.05)
@@ -219,7 +228,7 @@ class learn():
 
 				if phase == 'val':
 					if self.mp:
-						self.model.module.train(False)  # Set model to evaluate mode
+						self.model.module.train(False)	# Set model to evaluate mode
 						self.model.module.d_rate(0)
 
 					if not self.mp:
@@ -270,7 +279,7 @@ class learn():
 				print('{:5}:\n N_A: {:.5f} N_T'.format(N_A,N_T))
 		
 				if phase == 'val' and epoch_tra > self.best_tra and epoch > epoch_save_pt:
-					deep_copy(self,epoch,epoch_acc) # deep copy the model
+					self.deep_copy(epoch,epoch_acc) # deep copy the model
 					
 		time_elapsed = time.time() - since
 		print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
@@ -279,24 +288,16 @@ class learn():
 		P.recordPlot(self.record, self.dst)
 		return
 
-'''		# IN ________________________
+# ---------------------
+		# IN ________________________
 		# all_data is self.dataLoader[phase]
 		# OUT_________________________
 		#
-	def iterate_batch (self, all_data, ): 
-		print('iterate_batch TODO')
-'''
+	# def iterate_batch (self, all_data, ): 
+		# print('iterate_batch TODO')
+# ---------------------
 
-	def deep_copy (self, epoch, epoch_acc): 
-		print('deep_copy NEED TO CHECK')
-		self.best_tra = epoch_acc
-		self.best_epoch = epoch
-		self.best_model = copy.deepcopy(self.model)
-		torch.save(self.best_model, self.dst + 'model.pth')
-		torch.save(self.best_model.state_dict(), self.dst + 'state_dict.pth')
-		#NEW: use state_dict
-
-	#set learning rate based on which epoch we're in
+		#set learning rate based on which epoch we're in
 	def lr_scheduler(self, epoch):
 		lr = self.init_lr * (0.1**(epoch // self.lr_decay_epoch))
 		if epoch % self.lr_decay_epoch == 0: print('LR is set to {}'.format(lr))

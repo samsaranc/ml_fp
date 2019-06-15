@@ -9,6 +9,10 @@ __pycache__/
 #MacOS 
 .DS_Store
 
+#probably really big files
+.tar.gz
+.tar
+
 #images 
 *.PNG
 *.png
