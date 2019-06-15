@@ -1,6 +1,6 @@
+A tar file of the entire split dataset is available [here](https://github.com/samsaranc/ml_fp).
+
 To load the classifier, typically you need to read the file `model.pth`
 which needs to be in the same directory as a `index2class.pth` file.
 
-The directory `models` has all of the different versions of the
-classifier (stages 1-3, with 1 and 3 having more than one version) . it doesn't matter which one you use; I'm editing `Test.py`to
-load one of the `s3` versions.
+The directory `models` has all of the different versions of the classifier. Each sibdirectory contains the categories used (2 or 3 of Artist, Scientist, and Fashion), top accuracy score (out of 100%), and whether the ResNet model was pre-trained (P or NP).  
